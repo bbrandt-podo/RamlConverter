@@ -1,0 +1,56 @@
+html {
+  font-family: Verdana;
+  line-height: 1;
+  align-items: center;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h4{
+    margin:0;
+    padding:0;
+    font-size: 30px;
+}
+
+p6 {
+  margin:10px;
+  padding:10px;
+  font-size: 20px;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 2000px;
+  color: #000000;
+  font-size: 40px;
+  text-align: center;
+}
+
+#button {
+  color: #00000;
+  padding: 10px 100px;
+  border-radius: 20px;
+}
+
+#textarea{
+  width: 500px;
+  height: 500px;
+  text-align: justify;
+  font-size: 15px;
+}
+
+#ramlarea{
+  width: 500px;
+  height: 500px;
+  text-align: justify;
+  font-size: 15px;
+}
+
+
+input {
+  font-size: 20px;
+  display: block;
+  margin: auto;
+}
