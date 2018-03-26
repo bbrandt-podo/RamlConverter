@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<script src="app.js" type="text/javascript"></script>
+<script src="js.js" type="text/javascript"></script>
+
+
+</head>
+
+
+<body>
+
+
+  <h1>JSON & XSD -> RAML Converter</h1>
+  <h4>Select Data Type to be Converted</h4>
+
+  <select id="select">
+  <option value="JSON">JSON</option>
+  <option value="XSD">XSD</option>
+  <option value="Other">Other</option>
+  </select>
+  <br />
+  <br />
+
+  <p6>Paste your JSON or XSD schema below.</p6>
+
+
+<form id="SubmitForm" >
+  <textarea type="text" name="thetextarea" enctype="application/json" class="longInput" id="textarea" cols="30" rows="10"></textarea>
+  <input type="submit" id="button" value="Submit"  />
+</form>
+
+<br />
+<br />
+
+<p6>Converted RAML Below</p6>
+
+<form method="get" enctype="text/plain" action="/">
+  <textarea type="text" name="ramldata" class="longInput" id="ramlarea" cols="30" rows="10"></textarea>
+</form>
+
+<br />
+<br />
+
+<script>
+
+document.getElementById('SubmitForm').addEventListener('submit', getData);
+
+</script>
+
+
+
+</body>
+
+
+<footer>
+
+</footer>
