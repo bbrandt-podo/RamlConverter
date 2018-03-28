@@ -59,8 +59,6 @@ raml2json.js2dt(jsonInput, 'Person', function(err, raml){
     console.log(err);
     return;
   }
-  console.log('#%RAML 1.0 Library\n');
-  console.log(raml);
   ramlData = raml;
 });
 
