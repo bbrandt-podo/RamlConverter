@@ -22,17 +22,13 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-
 app.get('*', mainGet);
 app.post('*', mainPost);
 
 
 
 function mainGet(req, res) {
-
-
   res.end();
-
 }
 
 
