@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var raml2json = require('ramldt2jsonschema');
 var port = 8080;
 var app = express();
+var yaml = require('js-yaml');
 require('body-parser-xml')(bodyParser);
 
 //Create server object with Express app variable
@@ -54,9 +55,10 @@ function mainGet(req, res) {
 function mainPost(req, res) {
 
   //Handle POST request to /convertJSON
-  if (req.url == '/convertJSON') {
+  if (req.params[0] == '/convertJSON') {
     var jsonInput = req.body;
-    jsonInput = convertJSONtoRAML(jsonInput);
+    var radioChoice = req.query;
+    jsonInput = convertJSONtoRAML(jsonInput, radioChoice);
     res.send(jsonInput);
 
     //Handle POST request to /convertXSD
@@ -79,13 +81,15 @@ function mainPost(req, res) {
  *
  * @return raml : Formatted raml data.
  */
-function convertJSONtoRAML(jsonInput) {
+function convertJSONtoRAML(jsonInput, radioChoice) {
 
-  return npmConvert(jsonInput);
+
 
   //Parse JSON input to create JSON object that we can work with
   jsonInput = JSON.stringify(jsonInput);
   jsonInput = JSON.parse(jsonInput);
+  var nullChoice = radioChoice.radioChoice;
+  var nullChangeTo = radioChoice.nullChangeTo;
 
   //Call the Nesting function on the JSON input that handles all nesting
   Nesting(jsonInput);
@@ -103,7 +107,14 @@ function convertJSONtoRAML(jsonInput) {
     for (var i in object) {
       if (typeof object[i] == "object") {
         if (object[i] == null) {
-          console.log(i + ": " + "null found");
+            if (nullChoice == "remove"){
+                delete object[i];
+            }else if (nullChoice == "keep"){
+
+            }else if (nullChoice == "replace"){
+                object[i] = nullChangeTo;
+            }
+
         } else {
           console.log(i + ": " + "\n");
         }
@@ -119,24 +130,16 @@ function convertJSONtoRAML(jsonInput) {
     }
   }
 
-  function Null(object) {
-
-
-
-
-  }
-
-
-
-  var raml = jsonInput;
-
-  return raml;
+  var ramldata = yaml.safeDump(jsonInput, {
+      'indent': 2        // sort object keys
+  });
+  return ramldata;
 }
 
 
 /**
  * convertXSDtoRAML function is the "all-encompassing" function call to convert
- * the originally provided XSD data by the user, to RAML
+ * the originally provided XSD data by the user, to RAML.
  *
  * @param xsdInput : The XSD plain text given by the user that needs to be converted,
  * looped through, and parsed in order to be translated into RAML.
@@ -146,26 +149,14 @@ function convertXSDtoRAML(xsdInput) {
 
 
   xsdInput = JSON.stringify(xsdInput);
-  return xsdInput;
-
+  xsdInput = JSON.parse(xsdInput);
+  var ramldata = yaml.safeDump(xsdInput);
+  return ramldata;
 
 
 }
 
-function npmConvert(jsonInput){
 
-    var ramlData;
-    raml2json.js2dt(jsonInput, 'Person', function(err, raml){
-        if (err){
-            console.log(err);
-            return;
-        }
-        ramlData = raml;
-    });
-
-    return ramlData;
-
-}
 
 
 /**

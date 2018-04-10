@@ -12,6 +12,8 @@
     "body-parser": "^1.18.2",
     "body-parser-xml": "^1.1.0",
     "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "js-yaml": "^3.11.0",
     "ramldt2jsonschema": "^0.1.3"
   }
 }
