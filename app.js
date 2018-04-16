@@ -105,10 +105,10 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
    */
   function Nesting(object) {
     for (var i in object) {
-      if (typeof object[i] == "object") {
-        if (object[i] == null) {
+      if (typeof object[i] == "object" && (!Array.isArray(object))) {
+        if (object[i] == null || object[i] == "null") {
             if (nullChoice == "remove"){
-                delete object[i];
+                    delete object[i];
             }else if (nullChoice == "keep"){
 
             }else if (nullChoice == "replace"){
@@ -121,7 +121,14 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
         Nesting(object[i]);
       } else if (Array.isArray(object)) {
         for (var j = 0; j < object.length; j++) {
-          console.log(object[j]);
+            if (nullChoice == "remove" && object[j] == null || object[j] == "null"){
+                object.splice(j,1);
+                j--;
+            }else if (nullChoice == "replace" && (object[j] == null || object[j] == "null")){
+                object[j] = nullChangeTo;
+            }else {
+                console.log(object[j]);
+            }
         }
         break;
       } else {
@@ -130,8 +137,10 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
     }
   }
 
+
   var ramldata = yaml.safeDump(jsonInput, {
-      'indent': 2        // sort object keys
+      'indent': 2,
+      'noRefs': true
   });
   return ramldata;
 }
