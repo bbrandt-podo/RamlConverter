@@ -83,13 +83,13 @@ function mainPost(req, res) {
  */
 function convertJSONtoRAML(jsonInput, radioChoice) {
 
-
-
   //Parse JSON input to create JSON object that we can work with
   jsonInput = JSON.stringify(jsonInput);
   jsonInput = JSON.parse(jsonInput);
   var nullChoice = radioChoice.radioChoice;
   var nullChangeTo = radioChoice.nullChangeTo;
+  var emptyChoice = radioChoice.radioChoice2;
+  var emptyChangeTo = radioChoice.emptyChangeTo;
 
   //Call the Nesting function on the JSON input that handles all nesting
   Nesting(jsonInput);
@@ -107,32 +107,59 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
     for (var i in object) {
       if (typeof object[i] == "object" && (!Array.isArray(object))) {
         if (object[i] == null || object[i] == "null") {
-            if (nullChoice == "remove"){
+            if (nullChoice == "removeNull"){
                     delete object[i];
-            }else if (nullChoice == "keep"){
+            }else if (nullChoice == "keepNull"){
 
-            }else if (nullChoice == "replace"){
+            }else if (nullChoice == "replaceNull"){
                 object[i] = nullChangeTo;
             }
 
-        } else {
-          console.log(i + ": " + "\n");
+        }else if (object[i] == ""){
+            if (emptyChoice == "removeEmpty"){
+                delete object[i];
+            }else if (emptyChoice == "keepEmpty"){
+
+            }else if (emptyChoice == "replaceEmpty"){
+                object[i] = emptyChangeTo;
+            }
+
+        }else {
+            console.log(i + ": " + "\n");
         }
         Nesting(object[i]);
       } else if (Array.isArray(object)) {
         for (var j = 0; j < object.length; j++) {
-            if (nullChoice == "remove" && object[j] == null || object[j] == "null"){
-                object.splice(j,1);
-                j--;
-            }else if (nullChoice == "replace" && (object[j] == null || object[j] == "null")){
-                object[j] = nullChangeTo;
+            if (object[j] == null || object[j] == "null"){
+                if (nullChoice == "removeNull"){
+                    object.splice(j,1);
+                    j--;
+                }else if (nullChoice == "replaceNull"){
+                    object[j] = nullChangeTo;
+                }
+            }else if (object[j] == ""){
+                if (emptyChoice == "removeEmpty"){
+                    object.splice(j,1);
+                    j--;
+                }else if (emptyChoice == "replaceEmpty"){
+                    object[j] = emptyChangeTo;
+                }
             }else {
                 console.log(object[j]);
             }
         }
         break;
-      } else {
-        console.log(i + ": " + object[i]);
+      } else if (typeof object[i] != "object" && object[i] === ""){
+            if (emptyChoice == "removeEmpty"){
+                delete object[i];
+            }else if (emptyChoice == "keepEmpty"){
+
+            }else if (emptyChoice == "replaceEmpty"){
+                object[i] = emptyChangeTo;
+            }
+
+        }else {
+          console.log(i + ": " + object[i]);
       }
     }
   }
@@ -142,6 +169,9 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
       'indent': 2,
       'noRefs': true
   });
+
+  ramldata = "#%RAML 1.0\n" + ramldata;
+
   return ramldata;
 }
 
@@ -160,12 +190,11 @@ function convertXSDtoRAML(xsdInput) {
   xsdInput = JSON.stringify(xsdInput);
   xsdInput = JSON.parse(xsdInput);
   var ramldata = yaml.safeDump(xsdInput);
+
   return ramldata;
 
 
 }
-
-
 
 
 /**
