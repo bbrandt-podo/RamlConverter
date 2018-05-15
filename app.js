@@ -115,7 +115,7 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
                 object[i] = nullChangeTo;
             }
 
-        }else if (object[i] == ""){
+        }else if (object[i] === ""){
             if (emptyChoice == "removeEmpty"){
                 delete object[i];
             }else if (emptyChoice == "keepEmpty"){
@@ -130,6 +130,9 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
         Nesting(object[i]);
       } else if (Array.isArray(object)) {
         for (var j = 0; j < object.length; j++) {
+            if (typeof object[j] == "object"){
+                Nesting(object[j]);
+            }
             if (object[j] == null || object[j] == "null"){
                 if (nullChoice == "removeNull"){
                     object.splice(j,1);
@@ -137,7 +140,7 @@ function convertJSONtoRAML(jsonInput, radioChoice) {
                 }else if (nullChoice == "replaceNull"){
                     object[j] = nullChangeTo;
                 }
-            }else if (object[j] == ""){
+            }else if (object[j] === ""){
                 if (emptyChoice == "removeEmpty"){
                     object.splice(j,1);
                     j--;
